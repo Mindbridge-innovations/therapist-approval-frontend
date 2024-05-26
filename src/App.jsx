@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 //import MaintenancePage from "./pages/maintenance"
 //import NoMatch from "./components/NoMatch";
-import RegistrationPage from "./pages/register";
+
 import LoginPage from "./pages/login";
 import Home from "./pages/home";
 import RedirectToHomeIfAuthenticated from "./utils/RedirectToHomeIfAuthenticated";
@@ -20,8 +20,8 @@ function App() {
     <>
       <UserProvider>
         <Routes>
-          <Route path="/" element={<RedirectToHomeIfAuthenticated />} />
-          <Route path="/register" element={<RegistrationPage />} />
+          <Route path="" element={<RedirectToHomeIfAuthenticated />} />
+          
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />

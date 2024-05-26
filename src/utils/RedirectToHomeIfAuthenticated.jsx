@@ -2,7 +2,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
-import Welcome from '../pages/welcome'; // Import the Welcome component
+import LoginPage from '../pages/login';
+
 
 const RedirectToHomeIfAuthenticated = () => {
   const auth = useAuth();
@@ -15,7 +16,7 @@ const RedirectToHomeIfAuthenticated = () => {
   }, [auth, navigate]);
 
   // If not authenticated, render the Welcome component
-  return !auth ? <Welcome /> : null;
+  return !auth ? <LoginPage /> : null;
 };
 
 export default RedirectToHomeIfAuthenticated;

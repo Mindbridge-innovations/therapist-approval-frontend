@@ -20,20 +20,21 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 // import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 // import DashboardRoundedIcon from "@mui/icons-material/DashboardRounded";
 //import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
+// import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
 // import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
 // import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 // import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import BrightnessAutoRoundedIcon from "@mui/icons-material/BrightnessAutoRounded";
+import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
 import UserContext from "../../utils/contexts/UserContext";
 import { useContext } from "react";
+import HowToRegRoundedIcon from '@mui/icons-material/HowToRegRounded';
 
 import ColorSchemeToggle from "./ColorSchemeToggle";
 import { closeSidebar } from "../../utils/dashboard/utils";
@@ -129,9 +130,9 @@ export default function SideBar() {
       />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
         <IconButton variant="soft" color="primary" size="sm">
-          <BrightnessAutoRoundedIcon />
+          <HowToRegRoundedIcon />
         </IconButton>
-        <Typography level="title-lg">Cente Contacts</Typography>
+        <Typography level="title-lg">Therapist Approval</Typography>
         <ColorSchemeToggle sx={{ ml: "auto" }} />
       </Box>
       <Input
@@ -182,7 +183,7 @@ export default function SideBar() {
               <ListItemButton>
                 <ContactsIcon />
                 <ListItemContent>
-                  <Typography level="title-sm">Contacts</Typography>
+                  <Typography level="title-sm">Therapists</Typography>
                 </ListItemContent>
               </ListItemButton>
             </Link>
@@ -190,9 +191,9 @@ export default function SideBar() {
           <ListItem>
             <Link to="/contact-categories" style={{ textDecoration: "none" }}>
               <ListItemButton>
-                <AssignmentRoundedIcon />
+                <FileUploadRoundedIcon />
                 <ListItemContent>
-                  <Typography level="title-sm">Contact Categories</Typography>
+                  <Typography level="title-sm">Upload</Typography>
                 </ListItemContent>
               </ListItemButton>
             </Link>

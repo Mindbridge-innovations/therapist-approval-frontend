@@ -15,14 +15,14 @@ const UserProvider = ({ children }) => {
       if (token) {
         try {
           const response = await axios.get(
-            import.meta.env.VITE_API_URL + "/me",
+            import.meta.env.VITE_API_URL + "/user-info",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
           );
-          setUser(response.data.userData);
+          setUser(response.data);
         } catch (error) {
           console.error("Error fetching user data:", error);
           localStorage.removeItem("token");
@@ -33,6 +33,7 @@ const UserProvider = ({ children }) => {
 
     fetchUser();
   }, [navigate]);
+
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

@@ -5,7 +5,6 @@ import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import Checkbox from "@mui/joy/Checkbox";
-import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel, { formLabelClasses } from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
@@ -14,16 +13,16 @@ import Typography from "@mui/joy/Typography";
 import Stack from "@mui/joy/Stack";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
-import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
-import GoogleIcon from "./GoogleIcon";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LinearProgress from "@mui/joy/LinearProgress";
 import axios from "axios";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { useContext } from "react";
 import UserContext from "../utils/contexts/UserContext";
+import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
+
 
 /* eslint-disable react/prop-types */
 function ColorSchemeToggle(props) {
@@ -160,9 +159,9 @@ export default function LoginPage() {
           >
             <Box sx={{ gap: 2, display: "flex", alignItems: "center" }}>
               <IconButton variant="soft" color="primary" size="sm">
-                <BadgeRoundedIcon />
+                <VerifiedRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Cente Contacts</Typography>
+              <Typography level="title-lg">Therapist Approval</Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>
@@ -195,28 +194,9 @@ export default function LoginPage() {
                   Sign in
                 </Typography>
               </Stack>
-              <Button
-                variant="soft"
-                color="neutral"
-                fullWidth
-                startDecorator={<GoogleIcon />}
-              >
-                Continue with Google
-              </Button>
+              
             </Stack>
-            <Divider
-              sx={(theme) => ({
-                [theme.getColorSchemeSelector("light")]: {
-                  color: { xs: "#FFF", md: "text.tertiary" },
-                  "--Divider-lineColor": {
-                    xs: "#FFF",
-                    md: "var(--joy-palette-divider)",
-                  },
-                },
-              })}
-            >
-              or
-            </Divider>
+            
             <Stack gap={4} sx={{ mt: 2 }}>
               <form onSubmit={handleSubmit}>
                 <FormControl required>
@@ -254,14 +234,7 @@ export default function LoginPage() {
                     }}
                   >
                     <Checkbox size="sm" label="Remember me" name="persistent" />
-                    <Link
-                      to="/forgot-password"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Typography level="title-sm" component="span">
-                        Forgot your password?
-                      </Typography>
-                    </Link>
+
                   </Box>
                   <Button type="submit" fullWidth disabled={loading}>
                     Sign in
@@ -273,7 +246,7 @@ export default function LoginPage() {
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
             <Typography level="body-xs" textAlign="center">
-              © Cente Tech {new Date().getFullYear()}
+              © MindBridge {new Date().getFullYear()}
             </Typography>
           </Box>
         </Box>
