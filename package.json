@@ -22,6 +22,7 @@
     "@mui/icons-material": "^5.15.11",
     "@mui/joy": "^5.0.0-beta.29",
     "@mui/material": "^5.15.11",
+    "antd": "^5.17.3",
     "axios": "^1.6.7",
     "notistack": "^3.0.1",
     "prop-types": "^15.8.1",

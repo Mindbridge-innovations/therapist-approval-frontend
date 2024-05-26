@@ -14,6 +14,7 @@ import Profile from "./pages/profile";
 import Invite from "./pages/Invite";
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
+import Upload from "./pages/upload";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/contact-categories" element={<ContactCategories />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/invite" element={<Invite />} />
+            <Route path="/upload" element={<Upload />} />
           </Route>
 
           <Route path="*" element={<Custom404 />} />

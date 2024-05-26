@@ -189,7 +189,7 @@ export default function SideBar() {
             </Link>
           </ListItem>
           <ListItem>
-            <Link to="/contact-categories" style={{ textDecoration: "none" }}>
+            <Link to="/upload" style={{ textDecoration: "none" }}>
               <ListItemButton>
                 <FileUploadRoundedIcon />
                 <ListItemContent>
