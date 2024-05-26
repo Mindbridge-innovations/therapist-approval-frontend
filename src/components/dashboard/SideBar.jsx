@@ -160,23 +160,6 @@ export default function SideBar() {
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
-          {/* <ListItem>
-            <ListItemButton>
-              <HomeRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Home</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem>
-            <ListItemButton>
-              <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Dashboard</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem> */}
 
           <ListItem>
             <Link to="/dashboard" style={{ textDecoration: "none" }}>
@@ -197,56 +180,7 @@ export default function SideBar() {
                 </ListItemContent>
               </ListItemButton>
             </Link>
-          </ListItem>
-
-          {/* <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <AssignmentRoundedIcon />
-                  <ListItemContent>
-                    <Typography level="title-sm">Tasks</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={{ transform: open ? "rotate(180deg)" : "none" }}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem> */}
-
-          {/* <ListItem>
-            <ListItemButton
-              role="menuitem"
-              component="a"
-              href="/joy-ui/getting-started/templates/messages/"
-            >
-              <QuestionAnswerRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Messages</Typography>
-              </ListItemContent>
-              <Chip size="sm" color="primary" variant="solid">
-                4
-              </Chip>
-            </ListItemButton>
-          </ListItem> */}
-
-          
+          </ListItem>          
         </List>
 
         <List
@@ -265,43 +199,9 @@ export default function SideBar() {
               Support
             </ListItemButton>
           </ListItem>
-          {/* <ListItem>
-            <ListItemButton>
-              <SettingsRoundedIcon />
-              Settings
-            </ListItemButton>
-          </ListItem> */}
+         
         </List>
-        {/* <Card
-          invertedColors
-          variant="soft"
-          color="warning"
-          size="sm"
-          sx={{ boxShadow: "none" }}
-        >
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography level="title-sm">Used space</Typography>
-            <IconButton size="sm">
-              <CloseRoundedIcon />
-            </IconButton>
-          </Stack>
-          <Typography level="body-xs">
-            Your team has used 80% of your available space. Need more?
-          </Typography>
-          <LinearProgress
-            variant="outlined"
-            value={80}
-            determinate
-            sx={{ my: 1 }}
-          />
-          <Button size="sm" variant="solid">
-            Upgrade plan
-          </Button>
-        </Card> */}
+        
       </Box>
       <Divider />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
