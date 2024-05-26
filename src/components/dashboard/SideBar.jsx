@@ -22,13 +22,13 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 //import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 // import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
 // import QuestionAnswerRoundedIcon from "@mui/icons-material/QuestionAnswerRounded";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+// import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
 // import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 // import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+// import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
@@ -246,43 +246,7 @@ export default function SideBar() {
             </ListItemButton>
           </ListItem> */}
 
-          <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <GroupRoundedIcon />
-                  <ListItemContent>
-                    <Typography level="title-sm">Users</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={{ transform: open ? "rotate(180deg)" : "none" }}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton
-                    role="menuitem"
-                    // component="a"
-                    // href="/profile"
-                  >
-                    My profile
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <Link to="/invite" style={{ textDecoration: "none" }}>
-                    <ListItemButton role="menuitem">
-                      Invite a new user
-                    </ListItemButton>
-                  </Link>
-                </ListItem>
-                {/* <ListItem>
-                  <ListItemButton>Roles & permission</ListItemButton>
-                </ListItem> */}
-              </List>
-            </Toggler>
-          </ListItem>
+          
         </List>
 
         <List
