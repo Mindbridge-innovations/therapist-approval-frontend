@@ -1,0 +1,34 @@
+.add-contact-model,
+.cv-file-model, .MuiSelect-listbox {
+  z-index: 999999 !important;
+}
+
+.add-contact-model>.css-38si3l-JoyModal-backdrop,
+.cv-file-model>.css-38si3l-JoyModal-backdrop {
+  backdrop-filter: unset;
+}
+
+.add-contact-model .MuiModalDialog-root {
+  width: 45%;
+}
+
+.cv-file-model .MuiModalDialog-root {
+  width: 85%;
+}
+.dialog-content{
+  min-height: 525px;
+  overflow: scroll;
+}
+
+.text-danger {
+  color: red;
+}
+
+.pdf {
+  width: 600px;
+  height: 400px;
+}
+
+th, td{
+  padding: '12px 6px'
+}
