@@ -15,6 +15,7 @@ import Invite from "./pages/Invite";
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
 import Upload from "./pages/upload";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
   return (
@@ -29,7 +30,11 @@ function App() {
 
           <Route element={<PrivateRoutes />}>
             <Route path="/home" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
             <Route path="/contact-categories" element={<ContactCategories />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/invite" element={<Invite />} />

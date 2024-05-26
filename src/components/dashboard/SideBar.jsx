@@ -27,14 +27,14 @@ import SupportRoundedIcon from "@mui/icons-material/SupportRounded";
 // import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 // import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
+import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
 // import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import PropTypes from "prop-types";
 import { useNavigate, Link } from "react-router-dom";
 import UserContext from "../../utils/contexts/UserContext";
 import { useContext } from "react";
-import HowToRegRoundedIcon from '@mui/icons-material/HowToRegRounded';
+import HowToRegRoundedIcon from "@mui/icons-material/HowToRegRounded";
 
 import ColorSchemeToggle from "./ColorSchemeToggle";
 import { closeSidebar } from "../../utils/dashboard/utils";
@@ -160,27 +160,30 @@ export default function SideBar() {
             "--ListItem-radius": (theme) => theme.vars.radius.sm,
           }}
         >
-
-          <ListItem>
-            <Link to="/dashboard" style={{ textDecoration: "none" }}>
-              <ListItemButton>
-                <ContactsIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Therapists</Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link to="/upload" style={{ textDecoration: "none" }}>
-              <ListItemButton>
-                <FileUploadRoundedIcon />
-                <ListItemContent>
-                  <Typography level="title-sm">Upload</Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </Link>
-          </ListItem>          
+          {user?.role === "admin" && (
+            <ListItem>
+              <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                <ListItemButton>
+                  <ContactsIcon />
+                  <ListItemContent>
+                    <Typography level="title-sm">Therapists</Typography>
+                  </ListItemContent>
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
+          {user?.role === "therapist" && (
+            <ListItem>
+              <Link to="/upload" style={{ textDecoration: "none" }}>
+                <ListItemButton>
+                  <FileUploadRoundedIcon />
+                  <ListItemContent>
+                    <Typography level="title-sm">Upload</Typography>
+                  </ListItemContent>
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
         </List>
 
         <List
@@ -199,9 +202,7 @@ export default function SideBar() {
               Support
             </ListItemButton>
           </ListItem>
-         
         </List>
-        
       </Box>
       <Divider />
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
