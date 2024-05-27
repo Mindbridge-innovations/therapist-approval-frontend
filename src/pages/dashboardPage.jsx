@@ -2,7 +2,7 @@ import * as React from "react";
 import { CssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
+// import Button from "@mui/joy/Button";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import Link from "@mui/joy/Link";
 import Typography from "@mui/joy/Typography";
@@ -10,7 +10,7 @@ import '../App.css';
 
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import { CreateRounded } from "@mui/icons-material";
+// import { CreateRounded } from "@mui/icons-material";
 
 import Sidebar from "../components/dashboard/SideBar";
 import ContactsList from "../components/dashboard/ContactsList";
@@ -87,14 +87,14 @@ export default function Dashboard() {
             <Typography level="h2" component="h1">
               Therapists
             </Typography>
-            <Button
+            {/* <Button
               color="primary"
               startDecorator={<CreateRounded />}
               size="sm"
               onClick={() => {setOpen(true)}}
             >
               Create Contact
-            </Button>
+            </Button> */}
           </Box>
           <ContactsList
             setOpen={setOpen}

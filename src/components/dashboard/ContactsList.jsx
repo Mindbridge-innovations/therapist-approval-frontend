@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import * as React from "react";
 import axios from "axios";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
-import Chip from "@mui/joy/Chip";
+// import Chip from "@mui/joy/Chip";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -21,12 +22,12 @@ import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
-import Stack from "@mui/joy/Stack";
+// import Stack from "@mui/joy/Stack";
 import LinearProgress from "@mui/joy/LinearProgress";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
+// import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
@@ -215,26 +216,26 @@ export default function TherapistsList(props) {
     }
   };
 
-  const renderFilters = () => (
-    <React.Fragment>
-      <FormControl size="sm">
-        <FormLabel>Status</FormLabel>
-        <Select
-          size="sm"
-          placeholder="Filter by status"
-          slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-          value={status}
-        >
-          <Option value="active" selected onClick={() => setStatus("active")}>
-            Active
-          </Option>
-          <Option value="deactivated" onClick={() => setStatus("deactivated")}>
-            Deactivated
-          </Option>
-        </Select>
-      </FormControl>
-    </React.Fragment>
-  );
+  // const renderFilters = () => (
+  //   <React.Fragment>
+  //     <FormControl size="sm">
+  //       <FormLabel>Status</FormLabel>
+  //       <Select
+  //         size="sm"
+  //         placeholder="Filter by status"
+  //         slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+  //         value={status}
+  //       >
+  //         <Option value="active" selected onClick={() => setStatus("active")}>
+  //           Active
+  //         </Option>
+  //         <Option value="deactivated" onClick={() => setStatus("deactivated")}>
+  //           Deactivated
+  //         </Option>
+  //       </Select>
+  //     </FormControl>
+  //   </React.Fragment>
+  // );
 
   return (
     <React.Fragment>
@@ -285,7 +286,7 @@ export default function TherapistsList(props) {
   </ModalDialog>
 </Modal>
       </Sheet>
-      <Box
+      {/* <Box
         className="SearchAndFilters-tabletUp"
         sx={{
           borderRadius: "xs",
@@ -343,7 +344,7 @@ export default function TherapistsList(props) {
             </MenuItem>
           </Menu>
         </Dropdown>
-      </Box>
+      </Box> */}
       <Sheet
         className="TherapistTableContainer"
         variant="outlined"
