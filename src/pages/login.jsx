@@ -77,7 +77,7 @@ export default function LoginPage() {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-
+  
     try {
       const response = await axios.post(
         import.meta.env.VITE_API_URL + "/login",
@@ -86,8 +86,16 @@ export default function LoginPage() {
       setLoading(false); // Stop loading
       enqueueSnackbar("Login successful", { variant: "success" });
       localStorage.setItem("token", response.data.token); // Store the token
-      setUser(response.data.userData);
-      navigate("/dashboard"); // Navigate to the dashboard page
+      setUser(response.data.userData); // Set user data in context
+  
+      // Navigate based on user role
+      if (response.data.userData.role === 'admin') {
+        navigate("/dashboard"); // Navigate to the dashboard page for admins
+      } else if (response.data.userData.role === 'therapist') {
+        navigate("/upload"); // Navigate to the upload page for therapists
+      } else {
+        navigate("/"); // Default navigation if role is not recognized
+      }
     } catch (error) {
       setLoading(false); // Stop loading
       const errorMessage =
@@ -95,7 +103,7 @@ export default function LoginPage() {
         error.response?.data?.message ||
         "An unexpected error occurred";
       enqueueSnackbar(errorMessage, { variant: "error" });
-      console.error("Error logging in:", error.response.data);
+      console.error("Error logging in:", error.response?.data);
     }
   };
   React.useEffect(() => {
