@@ -57,33 +57,24 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ContactsList(props) {
+export default function TherapistsList(props) {
   const [order, setOrder] = React.useState("desc");
-  const [contacts, setContacts] = React.useState([]);
+  const [therapists, setTherapists] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [constactData, setContactData] = React.useState({});
+  const [therapistData, setTherapistData] = React.useState({});
   const [errors, setErrors] = React.useState({});
   const { enqueueSnackbar } = useSnackbar();
-  const [cv, setCV] = React.useState("");
-  const [cvopen, setCVOpen] = React.useState(false);
-  const [categorisationOpen, setCategorisationOpen] = React.useState(false);
+  const [credential, setCredential] = React.useState("");
+  const [credentialOpen, setCredentialOpen] = React.useState(false);
   const [status, setStatus] = React.useState("active");
-  const [categories, setCategories] = React.useState({
-    active: "all",
-    list: [],
-  });
-  const [selected, setSelected] = React.useState([]);
-  const [activeContact, setActiveContact] = React.useState({});
   const { open, setOpen } = props;
 
-  // Function to fetch contacts data
-  const fetchContacts = React.useCallback(async () => {
+  // Function to fetch therapists data
+  const fetchTherapists = React.useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/contacts?status=${status}&category=${
-          categories.active
-        }`,
+        `${import.meta.env.VITE_API_URL}/therapists`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -91,53 +82,53 @@ export default function ContactsList(props) {
           },
         }
       );
-      console.log(response.data.contacts);
-      return response.data.contacts;
+      console.log(response.data);
+      return response.data;
     } catch (error) {
       return [];
     }
-  }, [status, categories.active]);
+  }, []);
 
-  const handleCVUpload = (event) => {
+  const handleCredentialUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setCV(file);
+      setCredential(file);
     }
   };
 
   const captureInput = (event) => {
-    let details = constactData;
+    let details = therapistData;
     details[event.target.name] = event.target.value;
 
-    setContactData(details);
+    setTherapistData(details);
   };
 
   const validateForm = () => {
     let valid = true;
     let errorFields = {};
-    if (!constactData.name) {
+    if (!therapistData.firstName) {
       valid = false;
-      errorFields["name"] = "Name is required";
+      errorFields["firstName"] = "First name is required";
     }
 
-    if (!constactData.email) {
+    if (!therapistData.lastName) {
+      valid = false;
+      errorFields["lastName"] = "Last name is required";
+    }
+
+    if (!therapistData.email) {
       valid = false;
       errorFields["email"] = "Email address is required";
     }
 
-    if (!constactData.telephone) {
+    if (!therapistData.phoneNumber) {
       valid = false;
-      errorFields["telephone"] = "Telephone no is required";
+      errorFields["phoneNumber"] = "Phone number is required";
     }
 
-    if (!constactData.address) {
+    if (credential === "") {
       valid = false;
-      errorFields["address"] = "Address is required";
-    }
-
-    if (cv === "") {
-      valid = false;
-      errorFields["cv"] = "CV is required";
+      errorFields["credential"] = "Credential is required";
     }
 
     setErrors(errorFields);
@@ -150,17 +141,17 @@ export default function ContactsList(props) {
     }
 
     const formData = new FormData();
-    formData.append("name", constactData.name);
-    formData.append("email", constactData.email);
-    formData.append("telephone", constactData.telephone);
-    formData.append("address", constactData.address);
-    formData.append("cv", cv); // Append the file
+    formData.append("firstName", therapistData.firstName);
+    formData.append("lastName", therapistData.lastName);
+    formData.append("email", therapistData.email);
+    formData.append("phoneNumber", therapistData.phoneNumber);
+    formData.append("credential", credential); // Append the file
 
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/add-contact`,
+        `${import.meta.env.VITE_API_URL}/add-therapist`,
         formData,
         {
           headers: {
@@ -169,71 +160,35 @@ export default function ContactsList(props) {
           },
         }
       );
-      enqueueSnackbar("Contact added successfully", { variant: "success" });
-      fetchAndSetContacts();
+      enqueueSnackbar("Therapist added successfully", { variant: "success" });
+      fetchAndSetTherapists();
       setOpen(false);
     } catch (error) {
-      enqueueSnackbar("Error registering contact", { variant: "error" });
+      enqueueSnackbar("Error registering therapist", { variant: "error" });
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchAndSetContacts = React.useCallback(async () => {
-    const fetchedContacts = await fetchContacts();
-    setContacts(fetchedContacts);
-  }, [fetchContacts]);
-
-  const fetchCategories = React.useCallback(async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/categories`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data.categories;
-    } catch (error) {
-      return [];
-    }
-  }, []);
-
-  const fetchAndSetCategories = React.useCallback(async () => {
-    const categoryList = await fetchCategories();
-    setCategories({
-      active: "all",
-      list: categoryList,
-    });
-  }, [fetchCategories]);
+  const fetchAndSetTherapists = React.useCallback(async () => {
+    const fetchedTherapists = await fetchTherapists();
+    setTherapists(fetchedTherapists);
+  }, [fetchTherapists]);
 
   React.useEffect(() => {
-    fetchAndSetContacts();
-    fetchAndSetCategories();
-  }, [fetchAndSetContacts, fetchAndSetCategories]);
+    fetchAndSetTherapists();
+  }, [fetchAndSetTherapists]);
 
-  const openCV = (contact) => {
-    for (var index in contact.files) {
-      if (contact.files[index]["file_type"] === "CV") {
-        setCV(
-          `${import.meta.env.VITE_FILES_SERVER}/${
-            contact.files[index]["file_url"]
-          }`
-        );
-        setCVOpen(true);
-        break;
-      }
-    }
+  const openCredential = (therapist) => {
+    setCredential(therapist.fileUrl);
+    setCredentialOpen(true);
   };
 
-  const deactivateContact = async (contact) => {
+  const deactivateTherapist = async (therapist) => {
     const token = localStorage.getItem("token");
     await axios.post(
-      import.meta.env.VITE_API_URL + "/deactivate-contact",
-      { id: contact.id },
+      import.meta.env.VITE_API_URL + "/deactivate-therapist",
+      { id: therapist.userId },
       {
         headers: {
           "Content-Type": "application/json",
@@ -241,66 +196,10 @@ export default function ContactsList(props) {
         },
       }
     );
-    enqueueSnackbar("Contact deactivated successfully", { variant: "warning" });
-    fetchAndSetContacts();
-  };
-
-  const getValues = (value) => {
-    if (selected.includes(value)) {
-      let newVals = [];
-      let currentSelection = selected;
-      currentSelection.forEach((categoryId) => {
-        if (categoryId !== value) {
-          newVals.push(categoryId);
-        }
-      });
-
-      setSelected(newVals);
-    } else {
-      let currentSelection = selected;
-      currentSelection.push(value);
-      setSelected(currentSelection);
-    }
-  };
-
-  const openCategorisationForm = (contact) => {
-    let currentSelection = [];
-    contact.categories.forEach((category) => {
-      currentSelection.push(category.id);
+    enqueueSnackbar("Therapist deactivated successfully", {
+      variant: "warning",
     });
-    setSelected(currentSelection);
-
-    setCategorisationOpen(true);
-    setActiveContact(contact);
-  };
-
-  const submitCategorisation = async () => {
-    try {
-      setLoading(true);
-
-      const token = localStorage.getItem("token");
-      await axios.post(
-        import.meta.env.VITE_API_URL + "/add-contact-categorisation",
-        {
-          id: activeContact.id,
-          categories: selected,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      enqueueSnackbar("Categorisation updated successfully", {
-        variant: "success",
-      });
-      fetchAndSetContacts();
-      setCategorisationOpen(false);
-    } catch (error) {
-      enqueueSnackbar("Error saving categorisation", { variant: "error" });
-    }
-    setLoading(false);
+    fetchAndSetTherapists();
   };
 
   const renderFilters = () => (
@@ -321,32 +220,9 @@ export default function ContactsList(props) {
           </Option>
         </Select>
       </FormControl>
-      <FormControl size="sm">
-        <FormLabel>Category</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option
-            value="all"
-            onClick={() => setCategories({ ...categories, active: "all" })}
-          >
-            All
-          </Option>
-          {stableSort(categories["list"], getComparator(order, "name")).map(
-            (category) => (
-              <Option
-                key={category.id}
-                value={category.id}
-                onClick={() =>
-                  setCategories({ ...categories, active: category.id })
-                }
-              >
-                {category.name}
-              </Option>
-            )
-          )}
-        </Select>
-      </FormControl>
     </React.Fragment>
   );
+
   return (
     <React.Fragment>
       <Sheet
@@ -372,150 +248,72 @@ export default function ContactsList(props) {
           <FilterAltIcon />
         </IconButton>
         <Modal
-          className="add-contact-model"
+          className="add-therapist-model"
           open={open}
           onClose={() => setOpen(false)}
         >
           <ModalDialog aria-labelledby="filter-modal">
             <ModalClose />
             <Typography id="filter-modal" level="h2">
-              Create Contact
+              Create Therapist
             </Typography>
             <Divider sx={{ my: 2 }} />
             <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <Stack gap={4} sx={{ mt: 2 }}>
                 <form>
                   <FormControl required>
-                    <FormLabel>Contact Names</FormLabel>
-                    <Input type="text" name="name" onInput={captureInput} />
-                    <small className="text-danger">{errors.name}</small>
+                    <FormLabel>First Name</FormLabel>
+                    <Input
+                      type="text"
+                      name="firstName"
+                      onInput={captureInput}
+                    />
+                    <small className="text-danger">{errors.firstName}</small>
                   </FormControl>
                   <br />
                   <FormControl required>
-                    <FormLabel>Email address</FormLabel>
+                    <FormLabel>Last Name</FormLabel>
+                    <Input type="text" name="lastName" onInput={captureInput} />
+                    <small className="text-danger">{errors.lastName}</small>
+                  </FormControl>
+                  <br />
+                  <FormControl required>
+                    <FormLabel>Email</FormLabel>
                     <Input type="email" name="email" onInput={captureInput} />
                     <small className="text-danger">{errors.email}</small>
                   </FormControl>
                   <br />
                   <FormControl required>
-                    <FormLabel>Telephone</FormLabel>
+                    <FormLabel>Phone Number</FormLabel>
                     <Input
-                      type="text"
-                      name="telephone"
+                      type="tel"
+                      name="phoneNumber"
                       onInput={captureInput}
                     />
-                    <small className="text-danger">{errors.telephone}</small>
+                    <small className="text-danger">{errors.phoneNumber}</small>
                   </FormControl>
                   <br />
                   <FormControl required>
-                    <FormLabel>Physical address</FormLabel>
-                    <textarea
-                      name="address"
-                      rows="5"
-                      required
-                      onInput={captureInput}
-                    ></textarea>
-                    <small className="text-danger">{errors.address}</small>
-                  </FormControl>
-                  <br />
-                  <FormControl required>
-                    <FormLabel>Upload CV</FormLabel>
-                    <input
+                    <FormLabel>Credential</FormLabel>
+                    <Input
                       type="file"
-                      onChange={handleCVUpload}
-                      accept="application/pdf"
-                      name="cv"
-                      required
+                      name="credential"
+                      onChange={handleCredentialUpload}
                     />
-                    <small className="text-danger">{errors.cv}</small>
+                    <small className="text-danger">{errors.credential}</small>
                   </FormControl>
-                  <br />
-                  <Button onClick={handleSubmit} fullWidth disabled={loading}>
-                    Save Contact Details
-                  </Button>
                 </form>
-                {loading && <LinearProgress />}
               </Stack>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-        <Modal
-          className="cv-file-model"
-          open={cvopen}
-          onClose={() => setCVOpen(false)}
-        >
-          <ModalDialog aria-labelledby="filter-modal">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Contact CV
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Stack gap={4} sx={{ mt: 2 }}>
-                <iframe className="dialog-content" src={cv} />
-              </Stack>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-        <Modal
-          className="add-contact-model"
-          open={categorisationOpen}
-          onClose={() => setCategorisationOpen(false)}
-        >
-          <ModalDialog aria-labelledby="filter-modal">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Contact Categorisation -- {activeContact.name}
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Stack gap={4} sx={{ mt: 2 }}>
-                <Select
-                  multiple
-                  defaultValue={selected}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", gap: "0.25rem" }}>
-                      {selected.map((selectedOption) => (
-                        <Chip
-                          key={selectedOption.id}
-                          variant="soft"
-                          color="primary"
-                        >
-                          {selectedOption.label}
-                        </Chip>
-                      ))}
-                    </Box>
-                  )}
-                  sx={{
-                    minWidth: "15rem",
-                  }}
-                  slotProps={{
-                    listbox: {
-                      sx: {
-                        width: "100%",
-                      },
-                    },
-                  }}
+              <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end" }}>
+                <Button
+                  variant="plain"
+                  color="neutral"
+                  onClick={() => setOpen(false)}
                 >
-                  {categories["list"].map((category) => (
-                    <Option
-                      key={category.id}
-                      value={category.id}
-                      onClick={() => getValues(category.id)}
-                    >
-                      {category.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Stack>
-              <Button
-                onClick={submitCategorisation}
-                fullWidth
-                disabled={loading}
-              >
-                Save Details
-              </Button>
-              {loading && <LinearProgress />}
+                  Cancel
+                </Button>
+                <Button onClick={handleSubmit}>Submit</Button>
+              </Box>
             </Sheet>
           </ModalDialog>
         </Modal>
@@ -523,177 +321,166 @@ export default function ContactsList(props) {
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
-          borderRadius: "sm",
+          borderRadius: "xs",
           py: 2,
           display: { xs: "none", sm: "flex" },
           flexWrap: "wrap",
           gap: 1.5,
-          "& > *": {
-            minWidth: { xs: "120px", md: "160px" },
-          },
+          "& > *": { minWidth: { xs: "120px", md: "160px" } },
         }}
       >
-        <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for contact</FormLabel>
-          <Input
-            size="sm"
-            placeholder="Search"
-            startDecorator={<SearchIcon />}
-          />
+        <FormControl size="sm" sx={{ flexGrow: 1 }}>
+          <FormLabel>Search therapists</FormLabel>
+          <Input placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
         {renderFilters()}
+        <Dropdown>
+          <MenuButton
+            variant="outlined"
+            color="neutral"
+            size="sm"
+            startDecorator={<FilterAltIcon />}
+            endDecorator={<ArrowDropDownIcon />}
+          >
+            Filters
+          </MenuButton>
+          <Menu
+            size="sm"
+            aria-labelledby="filter-button"
+            sx={{ minWidth: 180 }}
+          >
+            <MenuItem>
+              <FormControl>
+                <FormLabel>Status</FormLabel>
+                <Select
+                  size="sm"
+                  placeholder="Filter by status"
+                  slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+                  value={status}
+                >
+                  <Option
+                    value="active"
+                    selected
+                    onClick={() => setStatus("active")}
+                  >
+                    Active
+                  </Option>
+                  <Option
+                    value="deactivated"
+                    onClick={() => setStatus("deactivated")}
+                  >
+                    Deactivated
+                  </Option>
+                </Select>
+              </FormControl>
+            </MenuItem>
+          </Menu>
+        </Dropdown>
       </Box>
       <Sheet
-        className="OrderTableContainer"
+        className="TherapistTableContainer"
         variant="outlined"
         sx={{
-          display: { xs: "none", sm: "initial" },
           width: "100%",
-          borderRadius: "sm",
-          flexShrink: 1,
+          flex: 1,
+          borderRadius: "md",
+          height: "auto",
           overflow: "auto",
           minHeight: 0,
         }}
       >
+        {loading && (
+          <LinearProgress
+            sx={{ width: "100%", position: "absolute", top: "-2px" }}
+          />
+        )}
         <Table
           aria-labelledby="tableTitle"
-          stickyHeader
           hoverRow
           sx={{
-            "--TableCell-headBackground":
-              "var(--joy-palette-background-level1)",
+            "--TableCell-headBackground": (theme) =>
+              theme.vars.palette.background.level1,
             "--Table-headerUnderlineThickness": "1px",
-            "--TableRow-hoverBackground":
-              "var(--joy-palette-background-level1)",
-            "--TableCell-paddingY": "4px",
-            "--TableCell-paddingX": "8px",
+            "--TableRow-hoverBackground": (theme) =>
+              theme.vars.palette.background.level1,
+            "--TableRow-selectedBackground": (theme) =>
+              theme.vars.palette.background.level1,
           }}
         >
           <thead>
             <tr>
-              <th style={{ width: 30, padding: "12px 6px" }}>
-                <Link
-                  underline="none"
-                  color="primary"
-                  component="button"
-                  onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-                  fontWeight="lg"
-                  endDecorator={<ArrowDropDownIcon />}
-                  sx={{
-                    "& svg": {
-                      transition: "0.2s",
-                      transform:
-                        order === "desc" ? "rotate(0deg)" : "rotate(180deg)",
-                    },
-                  }}
-                >
-                  #
-                </Link>
+              <th style={{ width: "20%", paddingLeft: 0 }}>Therapist</th>
+              <th style={{ width: "20%", paddingLeft: 0 }}>Email</th>
+              <th style={{ width: "20%", paddingLeft: 0 }}>Phone Number</th>
+              <th style={{ width: "10%", textAlign: "center", paddingLeft: 0 }}>
+                Actions
               </th>
-              <th>Names</th>
-              <th>Contacts</th>
-              <th>Address</th>
-              <th>Status</th>
-              <th>Created</th>
-              <th>Action</th>
+              <th style={{ width: "10%", paddingLeft: 0 }}>View Credential</th>
             </tr>
           </thead>
           <tbody>
-            {stableSort(contacts, getComparator(order, "id")).map(
-              (contact, key) => (
-                <tr key={contact.id}>
+            {stableSort(therapists, getComparator(order, "createdAt")).map(
+              (row) => (
+                <tr key={row.therapistId}>
                   <td>
-                    <Typography level="body-xs">{key + 1}</Typography>
-                  </td>
-                  <td>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                      <div>
-                        <Typography level="body-xs">{contact.name}</Typography>
-                      </div>
-                    </Box>
-                  </td>
-                  <td>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                      <div>
-                        <Typography level="body-xs">
-                          {contact.telephone}
-                        </Typography>
-                        <Typography level="body-xs">
-                          <a href={`mailto:${contact.email}`}>
-                            {contact.email}
-                          </a>
-                        </Typography>
-                      </div>
-                    </Box>
-                  </td>
-                  <td>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                      <div>
-                        <Typography level="body-xs">
-                          {contact.address}
-                        </Typography>
-                      </div>
-                    </Box>
-                  </td>
-                  <td>
-                    <Chip
-                      variant="soft"
-                      size="sm"
-                      startDecorator={<AutorenewRoundedIcon />}
-                      color={contact.status === "active" ? "success" : "danger"}
+                    <Typography
+                      fontWeight="md"
+                      textColor="text.primary"
+                      sx={{ display: "block" }}
                     >
-                      {contact.status === "active" ? "Active" : "Deactivated"}
-                    </Chip>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {new Date(contact.createdAt).toLocaleDateString()}
+                      {row.firstName} {row.lastName}
                     </Typography>
                   </td>
                   <td>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                      <Link level="body-xs" component="button">
-                        {" "}
-                        Action{" "}
-                      </Link>
-                      <Dropdown>
-                        <MenuButton
-                          slots={{ root: IconButton }}
-                          slotProps={{
-                            root: {
-                              variant: "plain",
-                              color: "neutral",
-                              size: "sm",
-                            },
-                          }}
-                        >
-                          <MoreHorizRoundedIcon />
-                        </MenuButton>
-                        <Menu size="sm" sx={{ minWidth: 140 }}>
-                          <MenuItem
-                            onClick={() => {
-                              openCV(contact);
-                            }}
+                    <Typography level="body2">{row.email}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body2">{row.phoneNumber}</Typography>
+                  </td>
+                  <td>
+                    <Dropdown>
+                      <MenuButton
+                        variant="plain"
+                        color="neutral"
+                        size="sm"
+                        startDecorator={<MoreHorizRoundedIcon />}
+                      />
+                      <Menu
+                        size="sm"
+                        aria-labelledby="more-button"
+                        sx={{ minWidth: 180 }}
+                      >
+                        <MenuItem>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => openCredential(row)}
                           >
-                            CV
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => openCategorisationForm(contact)}
-                          >
-                            Categorisation
-                          </MenuItem>
-                          <Divider />
-                          <MenuItem
+                            View Credential
+                          </Button>
+                        </MenuItem>
+                        <MenuItem>
+                          <Button
+                            variant="outlined"
                             color="danger"
-                            onClick={() => {
-                              deactivateContact(contact);
-                            }}
+                            onClick={() => deactivateTherapist(row)}
                           >
-                            Deactivate
-                          </MenuItem>
-                        </Menu>
-                      </Dropdown>
-                    </Box>
+                            Deactivate Therapist
+                          </Button>
+                        </MenuItem>
+                      </Menu>
+                    </Dropdown>
+                  </td>
+                  <td>
+                    <Link
+                      level="body2"
+                      href={row.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()} // Prevents opening the menu when clicking the link
+                    >
+                      View Credential
+                    </Link>
                   </td>
                 </tr>
               )
@@ -705,7 +492,7 @@ export default function ContactsList(props) {
   );
 }
 
-ContactsList.propTypes = {
+TherapistsList.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
 };
