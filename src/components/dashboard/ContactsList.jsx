@@ -65,8 +65,9 @@ export default function TherapistsList(props) {
   const [errors, setErrors] = React.useState({});
   const { enqueueSnackbar } = useSnackbar();
   const [credential, setCredential] = React.useState("");
-  const [credentialOpen, setCredentialOpen] = React.useState(false);
-  const [status, setStatus] = React.useState("active");
+  const [reason, setReason] = React.useState("");
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [selectedTherapist, setSelectedTherapist] = React.useState(null);
   const { open, setOpen } = props;
 
   // Function to fetch therapists data
@@ -89,17 +90,9 @@ export default function TherapistsList(props) {
     }
   }, []);
 
-  const handleCredentialUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setCredential(file);
-    }
-  };
-
   const captureInput = (event) => {
     let details = therapistData;
     details[event.target.name] = event.target.value;
-
     setTherapistData(details);
   };
 
@@ -179,27 +172,47 @@ export default function TherapistsList(props) {
     fetchAndSetTherapists();
   }, [fetchAndSetTherapists]);
 
-  const openCredential = (therapist) => {
-    setCredential(therapist.fileUrl);
-    setCredentialOpen(true);
+  const handleActionClick = (therapist, action) => {
+    setSelectedTherapist({ ...therapist, action: action });
+    setModalOpen(true);
   };
 
-  const deactivateTherapist = async (therapist) => {
+  const handleModalSubmit = async () => {
+    if (!selectedTherapist) return;
+  
     const token = localStorage.getItem("token");
-    await axios.post(
-      import.meta.env.VITE_API_URL + "/deactivate-therapist",
-      { id: therapist.userId },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+    const approve = selectedTherapist.action === "approve";
+  
+    try {
+      setLoading(true);
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/therapist-approval/${selectedTherapist.userId}`,
+        {
+          approve: approve,
+          reason: reason,
         },
-      }
-    );
-    enqueueSnackbar("Therapist deactivated successfully", {
-      variant: "warning",
-    });
-    fetchAndSetTherapists();
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      enqueueSnackbar(
+        `Therapist ${selectedTherapist.action}d successfully`,
+        { variant: "success" }
+      );
+      fetchAndSetTherapists();
+      setModalOpen(false);
+      setReason(""); // Reset the reason after submission
+    } catch (error) {
+      enqueueSnackbar(`Error during ${selectedTherapist.action}`, {
+        variant: "error",
+      });
+      console.error(`Error updating therapist approval status: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderFilters = () => (
@@ -247,76 +260,30 @@ export default function TherapistsList(props) {
         >
           <FilterAltIcon />
         </IconButton>
-        <Modal
-          className="add-therapist-model"
-          open={open}
-          onClose={() => setOpen(false)}
-        >
-          <ModalDialog aria-labelledby="filter-modal">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Create Therapist
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Stack gap={4} sx={{ mt: 2 }}>
-                <form>
-                  <FormControl required>
-                    <FormLabel>First Name</FormLabel>
-                    <Input
-                      type="text"
-                      name="firstName"
-                      onInput={captureInput}
-                    />
-                    <small className="text-danger">{errors.firstName}</small>
-                  </FormControl>
-                  <br />
-                  <FormControl required>
-                    <FormLabel>Last Name</FormLabel>
-                    <Input type="text" name="lastName" onInput={captureInput} />
-                    <small className="text-danger">{errors.lastName}</small>
-                  </FormControl>
-                  <br />
-                  <FormControl required>
-                    <FormLabel>Email</FormLabel>
-                    <Input type="email" name="email" onInput={captureInput} />
-                    <small className="text-danger">{errors.email}</small>
-                  </FormControl>
-                  <br />
-                  <FormControl required>
-                    <FormLabel>Phone Number</FormLabel>
-                    <Input
-                      type="tel"
-                      name="phoneNumber"
-                      onInput={captureInput}
-                    />
-                    <small className="text-danger">{errors.phoneNumber}</small>
-                  </FormControl>
-                  <br />
-                  <FormControl required>
-                    <FormLabel>Credential</FormLabel>
-                    <Input
-                      type="file"
-                      name="credential"
-                      onChange={handleCredentialUpload}
-                    />
-                    <small className="text-danger">{errors.credential}</small>
-                  </FormControl>
-                </form>
-              </Stack>
-              <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end" }}>
-                <Button
-                  variant="plain"
-                  color="neutral"
-                  onClick={() => setOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleSubmit}>Submit</Button>
-              </Box>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
+        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+  <ModalDialog aria-labelledby="reason-modal">
+    <ModalClose onClick={() => setModalOpen(false)} />
+    <Typography id="reason-modal" level="h2">
+      {selectedTherapist?.action === "approve" ? "Approve" : "Reject"} Therapist
+    </Typography>
+    <Divider sx={{ my: 2 }} />
+    <FormControl required>
+      <FormLabel>Reason</FormLabel>
+      <Input
+        type="text"
+        name="reason"
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+      />
+    </FormControl>
+    <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end", mt: 2 }}>
+      <Button variant="plain" color="neutral" onClick={() => setModalOpen(false)}>
+        Cancel
+      </Button>
+      <Button onClick={handleModalSubmit}>Send</Button>
+    </Box>
+  </ModalDialog>
+</Modal>
       </Sheet>
       <Box
         className="SearchAndFilters-tabletUp"
@@ -453,19 +420,19 @@ export default function TherapistsList(props) {
                         <MenuItem>
                           <Button
                             variant="outlined"
-                            color="primary"
-                            onClick={() => openCredential(row)}
+                            color="success"
+                            onClick={() => handleActionClick(row, "approve")}
                           >
-                            View Credential
+                            Approve
                           </Button>
                         </MenuItem>
                         <MenuItem>
                           <Button
                             variant="outlined"
                             color="danger"
-                            onClick={() => deactivateTherapist(row)}
+                            onClick={() => handleActionClick(row, "reject")}
                           >
-                            Deactivate Therapist
+                            Reject
                           </Button>
                         </MenuItem>
                       </Menu>
@@ -488,6 +455,31 @@ export default function TherapistsList(props) {
           </tbody>
         </Table>
       </Sheet>
+
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <ModalDialog aria-labelledby="reason-modal">
+          <ModalClose />
+          <Typography id="reason-modal" level="h2">
+            {selectedTherapist?.action === "approve" ? "Approve" : "Reject"} Therapist
+          </Typography>
+          <Divider sx={{ my: 2 }} />
+          <FormControl required>
+            <FormLabel>Reason</FormLabel>
+            <Input
+              type="text"
+              name="reason"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+          </FormControl>
+          <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end", mt: 2 }}>
+            <Button variant="plain" color="neutral" onClick={() => setModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleModalSubmit}>Send</Button>
+          </Box>
+        </ModalDialog>
+      </Modal>
     </React.Fragment>
   );
 }
