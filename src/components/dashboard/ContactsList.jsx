@@ -3,7 +3,6 @@ import * as React from "react";
 import axios from "axios";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
-// import Chip from "@mui/joy/Chip";
 import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
@@ -22,13 +21,12 @@ import Menu from "@mui/joy/Menu";
 import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
-// import Stack from "@mui/joy/Stack";
 import LinearProgress from "@mui/joy/LinearProgress";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-// import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import Chip from "@mui/joy/Chip";
 import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
 
@@ -70,6 +68,8 @@ export default function TherapistsList(props) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedTherapist, setSelectedTherapist] = React.useState(null);
   const { open, setOpen } = props;
+  const [documentModalOpen, setDocumentModalOpen] = React.useState(false);
+  const [documentUrl, setDocumentUrl] = React.useState("");
 
   // Function to fetch therapists data
   const fetchTherapists = React.useCallback(async () => {
@@ -180,10 +180,10 @@ export default function TherapistsList(props) {
 
   const handleModalSubmit = async () => {
     if (!selectedTherapist) return;
-  
+
     const token = localStorage.getItem("token");
     const approve = selectedTherapist.action === "approve";
-  
+
     try {
       setLoading(true);
       await axios.post(
@@ -216,26 +216,10 @@ export default function TherapistsList(props) {
     }
   };
 
-  // const renderFilters = () => (
-  //   <React.Fragment>
-  //     <FormControl size="sm">
-  //       <FormLabel>Status</FormLabel>
-  //       <Select
-  //         size="sm"
-  //         placeholder="Filter by status"
-  //         slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-  //         value={status}
-  //       >
-  //         <Option value="active" selected onClick={() => setStatus("active")}>
-  //           Active
-  //         </Option>
-  //         <Option value="deactivated" onClick={() => setStatus("deactivated")}>
-  //           Deactivated
-  //         </Option>
-  //       </Select>
-  //     </FormControl>
-  //   </React.Fragment>
-  // );
+  const handleDocumentClick = (url) => {
+    setDocumentUrl(url);
+    setDocumentModalOpen(true);
+  };
 
   return (
     <React.Fragment>
@@ -262,89 +246,30 @@ export default function TherapistsList(props) {
           <FilterAltIcon />
         </IconButton>
         <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-  <ModalDialog aria-labelledby="reason-modal">
-    <ModalClose onClick={() => setModalOpen(false)} />
-    <Typography id="reason-modal" level="h2">
-      {selectedTherapist?.action === "approve" ? "Approve" : "Reject"} Therapist
-    </Typography>
-    <Divider sx={{ my: 2 }} />
-    <FormControl required>
-      <FormLabel>Reason</FormLabel>
-      <Input
-        type="text"
-        name="reason"
-        value={reason}
-        onChange={(e) => setReason(e.target.value)}
-      />
-    </FormControl>
-    <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end", mt: 2 }}>
-      <Button variant="plain" color="neutral" onClick={() => setModalOpen(false)}>
-        Cancel
-      </Button>
-      <Button onClick={handleModalSubmit}>Send</Button>
-    </Box>
-  </ModalDialog>
-</Modal>
+          <ModalDialog aria-labelledby="reason-modal">
+            <ModalClose onClick={() => setModalOpen(false)} />
+            <Typography id="reason-modal" level="h2">
+              {selectedTherapist?.action === "approve" ? "Approve" : "Reject"} Therapist
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <FormControl required>
+              <FormLabel>Reason</FormLabel>
+              <Input
+                type="text"
+                name="reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+              />
+            </FormControl>
+            <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end", pt: 2 }}>
+              <Button variant="plain" color="neutral" onClick={() => setModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleModalSubmit}>Send</Button>
+            </Box>
+          </ModalDialog>
+        </Modal>
       </Sheet>
-      {/* <Box
-        className="SearchAndFilters-tabletUp"
-        sx={{
-          borderRadius: "xs",
-          py: 2,
-          display: { xs: "none", sm: "flex" },
-          flexWrap: "wrap",
-          gap: 1.5,
-          "& > *": { minWidth: { xs: "120px", md: "160px" } },
-        }}
-      >
-        <FormControl size="sm" sx={{ flexGrow: 1 }}>
-          <FormLabel>Search therapists</FormLabel>
-          <Input placeholder="Search" startDecorator={<SearchIcon />} />
-        </FormControl>
-        {renderFilters()}
-        <Dropdown>
-          <MenuButton
-            variant="outlined"
-            color="neutral"
-            size="sm"
-            startDecorator={<FilterAltIcon />}
-            endDecorator={<ArrowDropDownIcon />}
-          >
-            Filters
-          </MenuButton>
-          <Menu
-            size="sm"
-            aria-labelledby="filter-button"
-            sx={{ minWidth: 180 }}
-          >
-            <MenuItem>
-              <FormControl>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  size="sm"
-                  placeholder="Filter by status"
-                  slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-                  value={status}
-                >
-                  <Option
-                    value="active"
-                    selected
-                    onClick={() => setStatus("active")}
-                  >
-                    Active
-                  </Option>
-                  <Option
-                    value="deactivated"
-                    onClick={() => setStatus("deactivated")}
-                  >
-                    Deactivated
-                  </Option>
-                </Select>
-              </FormControl>
-            </MenuItem>
-          </Menu>
-        </Dropdown>
-      </Box> */}
       <Sheet
         className="TherapistTableContainer"
         variant="outlined"
@@ -377,13 +302,12 @@ export default function TherapistsList(props) {
         >
           <thead>
             <tr>
-              <th style={{ width: "20%", paddingLeft: 0 }}>Therapist</th>
-              <th style={{ width: "20%", paddingLeft: 0 }}>Email</th>
-              <th style={{ width: "20%", paddingLeft: 0 }}>Phone Number</th>
-              <th style={{ width: "10%", textAlign: "center", paddingLeft: 0 }}>
+              <th style={{ width: "30%", paddingLeft: 0 }}>Therapist</th>
+              <th style={{ width: "20%", paddingLeft: 0 }}>Approved</th>
+              <th style={{ width: "20%", paddingLeft: 0 }}>
                 Actions
               </th>
-              <th style={{ width: "10%", paddingLeft: 0 }}>View Credential</th>
+              <th style={{ width: "20%", paddingLeft: 0 }}>View Credential</th>
             </tr>
           </thead>
           <tbody>
@@ -398,12 +322,16 @@ export default function TherapistsList(props) {
                     >
                       {row.firstName} {row.lastName}
                     </Typography>
-                  </td>
-                  <td>
                     <Typography level="body2">{row.email}</Typography>
+                    <Typography level="body2">{row.phoneNumber}</Typography>
                   </td>
                   <td>
-                    <Typography level="body2">{row.phoneNumber}</Typography>
+                    <Chip
+                      variant="outlined"
+                      color={row.isApproved ? "success" : "danger"}
+                    >
+                      {row.isApproved ? "Approved" : "Not Approved"}
+                    </Chip>
                   </td>
                   <td>
                     <Dropdown>
@@ -440,15 +368,12 @@ export default function TherapistsList(props) {
                     </Dropdown>
                   </td>
                   <td>
-                    <Link
+                    <Button
                       level="body2"
-                      href={row.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()} // Prevents opening the menu when clicking the link
+                      onClick={() => handleDocumentClick(row.fileUrl)}
                     >
                       View Credential
-                    </Link>
+                    </Button>
                   </td>
                 </tr>
               )
@@ -457,27 +382,25 @@ export default function TherapistsList(props) {
         </Table>
       </Sheet>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <ModalDialog aria-labelledby="reason-modal">
+      <Modal open={documentModalOpen} onClose={() => setDocumentModalOpen(false)}>
+        <ModalDialog
+          aria-labelledby="document-modal"
+          sx={{
+            maxWidth: { xs: "100%", sm: "100%", md: "100%" },
+            height: { xs: "100%", sm: "100%", md: "100%" },
+          }}
+        >
           <ModalClose />
-          <Typography id="reason-modal" level="h2">
-            {selectedTherapist?.action === "approve" ? "Approve" : "Reject"} Therapist
+          <Typography id="document-modal" level="h2">
+            Credential Document
           </Typography>
           <Divider sx={{ my: 2 }} />
-          <FormControl required>
-            <FormLabel>Reason</FormLabel>
-            <Input
-              type="text"
-              name="reason"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+          <Box sx={{ width: "100%", height: "100%", overflow: "hidden" }}>
+            <iframe
+              src={documentUrl}
+              style={{ width: "100%", height: "100%", border: "none" }}
+              title="Credential Document"
             />
-          </FormControl>
-          <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end", mt: 2 }}>
-            <Button variant="plain" color="neutral" onClick={() => setModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleModalSubmit}>Send</Button>
           </Box>
         </ModalDialog>
       </Modal>
